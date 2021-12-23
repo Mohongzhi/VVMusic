@@ -4,9 +4,14 @@
              x:Class="VVMusic.Views.MusicListPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Music List!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <CollectionView ItemsSource="{Binding MusicListItemViewModels}" SelectionMode="Single"
+                            SelectionChangedCommand="{Binding SelectChangedCommand}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Name}"></Label>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
