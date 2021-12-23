@@ -4,8 +4,8 @@
              x:Class="VVMusic.Views.MusicListPage">
     <ContentPage.Content>
         <StackLayout>
-            <CollectionView ItemsSource="{Binding MusicListItemViewModels}" SelectionMode="Single"
-                            SelectionChangedCommand="{Binding SelectChangedCommand}">
+            <CollectionView ItemsSource="{Binding MusicListItemViewModels}" SelectionMode="Single" SelectedItem="{Binding CurrentSelectItem}"
+                            SelectionChangedCommand="{Binding SelectChangedCommand}" SelectionChangedCommandParameter="{Binding}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Label Text="{Binding Name}"></Label>

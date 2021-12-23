@@ -15,6 +15,15 @@ namespace VVMusic.ViewModels
         public Command SelectChangedCommand { get; }
         public ObservableCollection<MusicListItemViewModel> MusicListItemViewModels { get; set; }
 
+        private MusicListItemViewModel currentSelectItem;
+
+        public MusicListItemViewModel CurrentSelectItem
+        {
+            get { return currentSelectItem; }
+            set { SetProperty(ref currentSelectItem, value); }
+        }
+
+
         public IServerStore ServerStore { get; }
 
         public IConfigStore<ServerInfo> ConfigStore { get; }
@@ -28,6 +37,8 @@ namespace VVMusic.ViewModels
             ConfigStore = DependencyService.Get<IConfigStore<ServerInfo>>();
 
             MusicListItemViewModels = new ObservableCollection<MusicListItemViewModel>();
+
+            SelectChangedCommand = new Command(OnSelectChangedCommand);
         }        
 
         public async Task LoadMusic()
@@ -65,6 +76,19 @@ namespace VVMusic.ViewModels
                         PlayerService.Lyrics.Add(str + ".lrc");
                     }
                 }
+            }
+        }
+
+        public void OnSelectChangedCommand(object obj)
+        {
+            if (CurrentSelectItem != null)
+            {
+                Task.Run(async () =>
+                {
+                    await PlayerService.LoadMusicStreamAsync(CurrentSelectItem);
+
+                    PlayerService.PlayAsync();
+                });
             }
         }
     }
