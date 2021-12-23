@@ -19,12 +19,15 @@ namespace VVMusic.ViewModels
 
         public IConfigStore<ServerInfo> ConfigStore { get; }
 
+        public IPlayerService PlayerService { get; }
+
         public MusicListViewModel()
         {
             ServerStore = DependencyService.Get<IServerStore>();
+            PlayerService = DependencyService.Get<PlayerService>();
             ConfigStore = DependencyService.Get<IConfigStore<ServerInfo>>();
-            MusicListItemViewModels = new ObservableCollection<MusicListItemViewModel>();
 
+            MusicListItemViewModels = new ObservableCollection<MusicListItemViewModel>();
         }        
 
         public async Task LoadMusic()
@@ -39,14 +42,14 @@ namespace VVMusic.ViewModels
                 {//音乐
                     var musicItem = new MusicListItemViewModel();
                     musicItem.Name = item.Name;
-                    //PlayingService.PlayingList.Add(musicItem);
+                    PlayerService.MusicLists.Add(musicItem);
                     MusicListItemViewModels.Add(musicItem);
                     var str = item.Name.Remove(item.Name.LastIndexOf("."));
-                    //var lrc = PlayingService.Lyrics.FirstOrDefault(x => x.Contains(str));
-                    //if (lrc != null)
-                    //{
-                    //    musicItem.Lyrics = lrc;
-                    //}
+                    var lrc = PlayerService.Lyrics.FirstOrDefault(x => x.Contains(str));
+                    if (lrc != null)
+                    {
+                        musicItem.Lyrics = lrc;
+                    }
                 }
                 if (item.Name.Contains(".lrc"))
                 {//歌词
@@ -57,10 +60,10 @@ namespace VVMusic.ViewModels
                         first.Lyrics = str + ".lrc";
                         continue;
                     }
-                    //if (!PlayingService.Lyrics.Any(x => x.Contains(str)))
-                    //{
-                    //    PlayingService.Lyrics.Add(str + ".lrc");
-                    //}
+                    if (!PlayerService.Lyrics.Any(x => x.Contains(str)))
+                    {
+                        PlayerService.Lyrics.Add(str + ".lrc");
+                    }
                 }
             }
         }
