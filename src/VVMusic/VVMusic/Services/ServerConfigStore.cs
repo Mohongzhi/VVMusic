@@ -30,7 +30,8 @@ namespace VVMusic.Services
             var config_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "server.config");
             if (File.Exists(config_path))
             {
-                return JsonConvert.DeserializeObject<ServerInfo>(File.ReadAllText(config_path));
+                ServerInfo = JsonConvert.DeserializeObject<ServerInfo>(File.ReadAllText(config_path));
+                return ServerInfo;
             }
             return null;
         }

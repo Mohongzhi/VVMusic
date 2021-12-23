@@ -14,6 +14,7 @@ namespace VVMusic.ViewModels
 
         public Command TestCommand { get; }
 
+        #region Properties
         private string serverAddress;
 
         public string ServerAddress
@@ -38,10 +39,24 @@ namespace VVMusic.ViewModels
             set { SetProperty(ref password, value); }
         }
 
+        private bool isEnableSave = false;
+
+        public bool IsEnableSave
+        {
+            get { return isEnableSave; }
+            set { SetProperty(ref isEnableSave, value); }
+        }
+
+        #endregion
+
         public IConfigStore<ServerInfo> ConfigStore => DependencyService.Get<IConfigStore<ServerInfo>>();
+
+        public IServerStore ServerStore { get; }
 
         public SettingViewModel()
         {
+            ServerStore =  DependencyService.Get<IServerStore>();
+
             SaveCommand = new Command(SaveButtonCommand);
             TestCommand = new Command(TestButtonCommand);
 
@@ -65,9 +80,10 @@ namespace VVMusic.ViewModels
             ConfigStore.SaveConfigAsync(serverInfo).Wait();
         }
 
-        private void TestButtonCommand(object obj)
+        private async void TestButtonCommand(object obj)
         {
-
+            var isConnected = await ServerStore.TryConnectAsync(ServerAddress,UserName,Password);
+            IsEnableSave = isConnected;
         }
     }
 }

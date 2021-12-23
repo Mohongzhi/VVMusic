@@ -13,6 +13,7 @@ namespace VVMusic
             InitializeComponent();
 
             DependencyService.Register<ServerConfigStore>();
+            DependencyService.Register<ServerStore>();
 
             MainPage = new AppShell();
         }

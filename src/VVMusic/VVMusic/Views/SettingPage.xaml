@@ -12,7 +12,7 @@
                 <Entry Placeholder="请输入用户名" Margin="8,0,8,8" Text="{Binding UserName}"></Entry>
                 <Entry Placeholder="请输入密码" Margin="8,0,8,8" Text="{Binding Password}" IsPassword="True"></Entry>
                 <Button Text="测试连接" Margin="8,8,8,8" Command="{Binding TestCommand}"></Button>
-                <Button Text="保存" Margin="8,0,8,8" Command="{Binding SaveCommand}"></Button>
+                <Button Text="保存" Margin="8,0,8,8" Command="{Binding SaveCommand}" IsEnabled="{Binding IsEnableSave}"></Button>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
