@@ -5,12 +5,13 @@
     <ContentPage.Content>
         <StackLayout>
             <StackLayout>
-                <Label Text="欢迎使用MusicTool!"
+                <Label Text="欢迎使用VVMusic!"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
                 <Entry Placeholder="请输入服务器地址" Margin="8,0,8,8" Text="{Binding ServerAddress}"></Entry>
                 <Entry Placeholder="请输入用户名" Margin="8,0,8,8" Text="{Binding UserName}"></Entry>
                 <Entry Placeholder="请输入密码" Margin="8,0,8,8" Text="{Binding Password}" IsPassword="True"></Entry>
+                <Button Text="测试连接" Margin="8,8,8,8" Command="{Binding TestCommand}"></Button>
                 <Button Text="保存" Margin="8,0,8,8" Command="{Binding SaveCommand}"></Button>
             </StackLayout>
         </StackLayout>

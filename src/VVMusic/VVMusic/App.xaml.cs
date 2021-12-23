@@ -1,4 +1,5 @@
 ﻿using System;
+using VVMusic.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,7 +12,8 @@ namespace VVMusic
         {
             InitializeComponent();
 
-            //DependencyService.Register<>();
+            DependencyService.Register<ServerConfigStore>();
+
             MainPage = new AppShell();
         }
 
