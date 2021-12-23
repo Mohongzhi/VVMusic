@@ -12,6 +12,11 @@
                 <Entry Placeholder="请输入用户名" Margin="8,0,8,8" Text="{Binding UserName}"></Entry>
                 <Entry Placeholder="请输入密码" Margin="8,0,8,8" Text="{Binding Password}" IsPassword="True"></Entry>
                 <Button Text="测试连接" Margin="8,8,8,8" Command="{Binding TestCommand}"></Button>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="音乐文件夹路径:"></Label>
+                    <Label Text="{Binding MusicFolder}"></Label>                    
+                </StackLayout>
+                <Button Text="选择音乐文件夹路径" Margin="8,0,8,8" Command="{Binding SelectFileCommand}" IsEnabled="{Binding IsEnableSave}"></Button>
                 <Button Text="保存" Margin="8,0,8,8" Command="{Binding SaveCommand}" IsEnabled="{Binding IsEnableSave}"></Button>
             </StackLayout>
         </StackLayout>

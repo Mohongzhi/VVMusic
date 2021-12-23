@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Xamarin.Forms;
+using VVMusic.Views;
 using VVMusic.Models;
 using VVMusic.Services;
 using Xamarin.Essentials;
@@ -10,9 +11,13 @@ namespace VVMusic.ViewModels
 {
     public class SettingViewModel : VVBaseViewModel
     {
+        #region Commands
         public Command SaveCommand { get; }
 
         public Command TestCommand { get; }
+
+        public Command SelectFileCommand { get; } 
+        #endregion
 
         #region Properties
         private string serverAddress;
@@ -47,6 +52,14 @@ namespace VVMusic.ViewModels
             set { SetProperty(ref isEnableSave, value); }
         }
 
+        private string musicFolder;
+
+        public string MusicFolder
+        {
+            get { return musicFolder; }
+            set { SetProperty(ref musicFolder, value); }
+        }
+
         #endregion
 
         public IConfigStore<ServerInfo> ConfigStore => DependencyService.Get<IConfigStore<ServerInfo>>();
@@ -55,35 +68,51 @@ namespace VVMusic.ViewModels
 
         public SettingViewModel()
         {
-            ServerStore =  DependencyService.Get<IServerStore>();
+            ServerStore = DependencyService.Get<IServerStore>();
 
             SaveCommand = new Command(SaveButtonCommand);
             TestCommand = new Command(TestButtonCommand);
+            SelectFileCommand = new Command(SelectFileButtonCommand);
 
+            LoadConfig();
+        }
+
+        public void LoadConfig()
+        {
             var serverInfo = ConfigStore.LoadConfigAsync().Result;
             if (serverInfo != null)
             {
                 Password = serverInfo.Password;
                 UserName = serverInfo.UserName;
                 ServerAddress = serverInfo.ServerAddress;
-            }            
+                MusicFolder = serverInfo.MusicFolder;
+            }
         }
 
         private void SaveButtonCommand(object obj)
         {
             var serverInfo = new ServerInfo()
             {
-                 Password = Password,
-                  UserName = UserName,
-                   ServerAddress = ServerAddress
+                Password = Password,
+                UserName = UserName,
+                ServerAddress = ServerAddress
             };
             ConfigStore.SaveConfigAsync(serverInfo).Wait();
         }
 
         private async void TestButtonCommand(object obj)
         {
-            var isConnected = await ServerStore.TryConnectAsync(ServerAddress,UserName,Password);
+            var isConnected = await ServerStore.TryConnectAsync(ServerAddress, UserName, Password);
             IsEnableSave = isConnected;
+        }
+
+        private async void SelectFileButtonCommand(object obj)
+        {
+            if (ConfigStore.ServerInfo == null)
+            {
+                return;
+            }
+            await Shell.Current.GoToAsync($"{nameof(SelectFolderPage)}");
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using VVMusic.Models;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.IO;
 
 namespace VVMusic.Services
 {
@@ -27,11 +27,18 @@ namespace VVMusic.Services
         /// <returns></returns>
         public async Task<ServerInfo> LoadConfigAsync()
         {
-            var config_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "server.config");
-            if (File.Exists(config_path))
+            try
             {
-                ServerInfo = JsonConvert.DeserializeObject<ServerInfo>(File.ReadAllText(config_path));
-                return ServerInfo;
+                var config_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "server.config");
+                if (File.Exists(config_path))
+                {
+                    var fileInfo = File.ReadAllText(config_path);
+                    ServerInfo = JsonConvert.DeserializeObject<ServerInfo>(fileInfo);
+                    return ServerInfo;
+                }
+            }
+            catch(Exception ex)
+            {
             }
             return null;
         }
@@ -43,12 +50,22 @@ namespace VVMusic.Services
         /// <returns></returns>
         public async Task SaveConfigAsync(ServerInfo config)
         {
-            var config_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "server.config");
-            var fileStream = new FileStream(config_path, FileMode.OpenOrCreate);
-            using(var writer = new StreamWriter(fileStream))
+            try
             {
-                writer.Write(JsonConvert.SerializeObject(config));
+                var config_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "server.config");
+                File.Delete(config_path);
+                var fileStream = new FileStream(config_path, FileMode.OpenOrCreate);
+                using (var writer = new StreamWriter(fileStream))
+                {
+                    var fs = JsonConvert.SerializeObject(config);
+                    writer.Write(fs);
+                }
+                ServerInfo = config;
             }
+            catch
+            {
+
+            }            
         }
     }
 }

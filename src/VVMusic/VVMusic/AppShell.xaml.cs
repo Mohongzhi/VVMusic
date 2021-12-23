@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VVMusic.Views;
 using Xamarin.Forms;
 
 namespace VVMusic
@@ -9,6 +10,8 @@ namespace VVMusic
         public AppShell()
         {
             InitializeComponent();
+
+            Routing.RegisterRoute(nameof(SelectFolderPage),typeof(SelectFolderPage));
         }
 
         private async void OnMenuItemClicked(object sender, EventArgs e)

@@ -10,20 +10,14 @@ using Xamarin.Forms.Xaml;
 namespace VVMusic.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SettingPage : ContentPage
+    public partial class SelectFolderPage : ContentPage
     {
-        SettingViewModel settingViewModel = new SettingViewModel();
-        public SettingPage()
+        SelectFolderViewModel viewModel = new SelectFolderViewModel();
+        public SelectFolderPage()
         {
             InitializeComponent();
-            this.BindingContext = settingViewModel;
-        }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            settingViewModel.LoadConfig();
+            BindingContext = viewModel;
         }
     }
 }

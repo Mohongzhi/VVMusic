@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" Title="{Binding FolderTitle}"
+             x:Class="VVMusic.Views.SelectFolderPage">    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="确认" Command="{Binding ConfirmCommand}">
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView SelectionMode="Single" ItemsSource="{Binding FolderItemViewModels}"
+                            SelectionChangedCommand="{Binding OnSelectFolderCommand}"
+                            SelectionChangedCommandParameter="{Binding}" SelectedItem="{Binding SelectionItem}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout HeightRequest="30">
+                            <Label Text="{Binding FolderName}"></Label>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
