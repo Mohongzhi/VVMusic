@@ -41,11 +41,11 @@ namespace VVMusic.ViewModels
             MusicListItemViewModels = new ObservableCollection<MusicListItemViewModel>();
 
             SelectChangedCommand = new Command(OnSelectChangedCommand);
-        }        
+        }
 
         public async Task LoadMusic()
         {
-           MusicListItemViewModels.Clear();
+            MusicListItemViewModels.Clear();
 
             var listItems = ServerStore.GetLinkItemsAsync(ConfigStore.ServerInfo.MusicFolder).Result;
             var allMusic = listItems.Where(x => x.IsFolder == false).ToList();
@@ -81,7 +81,7 @@ namespace VVMusic.ViewModels
             }
         }
 
-        public void OnSelectChangedCommand(object obj)
+        public async void OnSelectChangedCommand(object obj)
         {
             if (CurrentSelectItem != null)
             {
@@ -94,7 +94,7 @@ namespace VVMusic.ViewModels
                     PlayerService.PlayAsync();
                 });
 
-                Shell.Current.GoToAsync($"{nameof(PlayingPage)}");
+                await Shell.Current.GoToAsync($"{nameof(PlayingPage)}");
             }
         }
     }

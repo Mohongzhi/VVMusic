@@ -33,7 +33,7 @@ namespace VVMusic.ViewModels
             set { SetProperty(ref strDuration, value); }
         }
 
-        private double currentPosition;
+        private double currentPosition = 0;
 
         public double CurrentPosition
         {
@@ -41,7 +41,7 @@ namespace VVMusic.ViewModels
             set { SetProperty(ref currentPosition, value); }
         }
 
-        private double duration;
+        private double duration = 1;
 
         public double Duration
         {

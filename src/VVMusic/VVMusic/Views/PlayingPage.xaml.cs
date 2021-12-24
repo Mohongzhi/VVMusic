@@ -15,16 +15,8 @@ namespace VVMusic.Views
     {
         PlayingViewModel PlayingViewModel;
 
-        public IPlayerService PlayerService { get; }
-
-        public IServerStore ServerStore { get; }
-
-
         public PlayingPage()
         {
-            PlayerService = DependencyService.Get<IPlayerService>();
-            ServerStore = DependencyService.Get<IServerStore>();
-
             PlayingViewModel = new PlayingViewModel();
             PlayingViewModel.OnScrollListView += (id) =>
             {

@@ -16,7 +16,8 @@
             </CollectionView>
 
             <StackLayout>
-                <Slider x:Name="SliProgress" Value="{Binding CurrentPosition}" Maximum="{Binding Duration}"></Slider>
+                <Slider x:Name="SliProgress" ThumbColor="Green" MaximumTrackColor="Red" MinimumTrackColor="Gray"
+                        Value="{Binding CurrentPosition}" Maximum="{Binding Duration}"></Slider>
             </StackLayout>
             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                 <Label Text="{Binding StrCurrentPosition}" HorizontalOptions="Start"></Label>
