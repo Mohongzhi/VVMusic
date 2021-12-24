@@ -43,6 +43,10 @@ namespace VVMusic.Services
 
         Task LoadMusicStreamAsync(MusicListItemViewModel model);
 
+        Task<List<LrcItemViewModel>> LoadLyrics();
+
+        Task GetTimeInfo();
+
     }
 
     public enum SwitchMode

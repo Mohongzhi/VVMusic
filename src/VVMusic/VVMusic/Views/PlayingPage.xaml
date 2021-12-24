@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VVMusic.Views.PlayingPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView x:Name="LrcListView" ItemsSource="{Binding Lyrics}" Margin="8,0,8,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout HorizontalOptions="CenterAndExpand" HeightRequest="55">
+                            <Label HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Text="{Binding Lyrics}" TextColor="{Binding TextColor}"
+                                 FontSize="{Binding FontSize}" MaxLines="4"  LineBreakMode="NoWrap"></Label>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <StackLayout>
+                <Slider x:Name="SliProgress" Value="{Binding CurrentPosition}" Maximum="{Binding Duration}"></Slider>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Label Text="{Binding StrCurrentPosition}" HorizontalOptions="Start"></Label>
+                <Label Text="/"></Label>
+                <Label Text="{Binding StrDuration}" HorizontalOptions="End"></Label>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="0,0,0,8">
+                <Button Text="上一首"></Button>
+                <Button Text="播放/暂停" Command="{Binding PlayCommand}"></Button>
+                <Button Text="下一首"></Button>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

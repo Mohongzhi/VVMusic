@@ -12,6 +12,7 @@ namespace VVMusic
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(SelectFolderPage),typeof(SelectFolderPage));
+            Routing.RegisterRoute(nameof(PlayingPage), typeof(PlayingPage));
         }
 
         private async void OnMenuItemClicked(object sender, EventArgs e)

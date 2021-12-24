@@ -7,6 +7,8 @@ using VVMusic.Services;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using VVMusic.Views;
+using VVMusic.StaticInfo;
 
 namespace VVMusic.ViewModels
 {
@@ -85,10 +87,14 @@ namespace VVMusic.ViewModels
             {
                 Task.Run(async () =>
                 {
+                    PlayingInfo.MusicListItem = CurrentSelectItem;
+
                     await PlayerService.LoadMusicStreamAsync(CurrentSelectItem);
 
                     PlayerService.PlayAsync();
                 });
+
+                Shell.Current.GoToAsync($"{nameof(PlayingPage)}");
             }
         }
     }

@@ -95,8 +95,9 @@ namespace VVMusic.ViewModels
             {
                 Password = Password,
                 UserName = UserName,
-                ServerAddress = ServerAddress
-            };
+                ServerAddress = ServerAddress,
+                MusicFolder = MusicFolder
+        };
             ConfigStore.SaveConfigAsync(serverInfo).Wait();
         }
 
