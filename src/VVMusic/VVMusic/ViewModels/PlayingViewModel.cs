@@ -16,7 +16,7 @@ namespace VVMusic.ViewModels
     public class PlayingViewModel : VVBaseViewModel
     {
         public Command PlayCommand { get; }
-               
+
         private string strCurrentPosition;
 
         public string StrCurrentPosition
@@ -53,17 +53,13 @@ namespace VVMusic.ViewModels
         {
             Task.Run(async () =>
            {
-               //while (!PlayerService.audioPlayer.IsPlaying)
-               //{
-               //    await Task.Delay(300);
-               //}
                var lycList = await PlayerService.LoadLyrics();
                foreach (var item in lycList)
                {
                    Lyrics.Add(item);
                }
 
-               ScrollLyrics();
+               ScrollLyrics(true);
            });
         }
 
@@ -84,17 +80,26 @@ namespace VVMusic.ViewModels
 
         public async void Play(object obj)
         {
-            PlayerService.PlayAsync();
+            if (PlayerService.audioPlayer.IsPlaying)
+            {
+                PlayerService.PauseAsync();
+            }
+            else
+            {
+                PlayerService.PlayAsync();
+                ScrollLyrics();
+            }
         }
 
-        private void ScrollLyrics()
+        private void ScrollLyrics(bool isWaitPlay = false)
         {
             Task.Run(async () =>
             {
-                while (!PlayerService.audioPlayer.IsPlaying)
-                {
-                    await Task.Delay(300);
-                }
+                if (isWaitPlay)
+                    while (!PlayerService.audioPlayer.IsPlaying)
+                    {
+                        await Task.Delay(300);
+                    }
                 while (PlayerService.audioPlayer.IsPlaying)
                 {
                     await PlayerService.GetTimeInfo();
@@ -145,8 +150,6 @@ namespace VVMusic.ViewModels
                 }
             }
         }
-
-
 
         public Action<int> OnScrollListView;
     }

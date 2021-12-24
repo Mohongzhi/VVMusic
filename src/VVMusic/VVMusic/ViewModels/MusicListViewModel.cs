@@ -87,6 +87,12 @@ namespace VVMusic.ViewModels
             {
                 Task.Run(async () =>
                 {
+                    if(PlayingInfo.MusicListItem == CurrentSelectItem)
+                    {
+                        await Shell.Current.GoToAsync($"{nameof(PlayingPage)}");
+                        return;
+                    }
+
                     PlayingInfo.MusicListItem = CurrentSelectItem;
 
                     await PlayerService.LoadMusicStreamAsync(CurrentSelectItem);
