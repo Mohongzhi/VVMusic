@@ -94,8 +94,8 @@
         await Shell.Current.GoToAsync("//LoginPage");
     -->
     <TabBar>
-        <ShellContent Title="音乐" Icon="icon_about.png" ContentTemplate="{DataTemplate local:MusicListPage}" />
-        <ShellContent Title="设置" Icon="icon_feed.png" ContentTemplate="{DataTemplate local:SettingPage}"></ShellContent>
+        <ShellContent Title="音乐" Icon="music_list_128.png" ContentTemplate="{DataTemplate local:MusicListPage}" />
+        <ShellContent Title="设置" Icon="setting_128.png" ContentTemplate="{DataTemplate local:SettingPage}"></ShellContent>
     </TabBar>
 
     <!-- Optional Templates 
