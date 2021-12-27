@@ -1,22 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Xamarin.Forms;
+using System.Threading;
 using VVMusic.Services;
 using VVMusic.StaticInfo;
-using VVMusic.Views;
-using Xamarin.Forms;
+using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace VVMusic.ViewModels
 {
     public class PlayingViewModel : VVBaseViewModel
     {
-        public Command PlayCommand { get; }
+        #region Commands
+        public Command NextCommand { get; }
 
+        public Command PreviousCommand { get; }
+
+        public Command PlayCommand { get; }
+        #endregion
+
+        #region Mvvm
         private string strCurrentPosition;
 
         public string StrCurrentPosition
@@ -48,12 +52,19 @@ namespace VVMusic.ViewModels
             get { return duration; }
             set { SetProperty(ref duration, value); }
         }
+        #endregion
+
+        public Action<int> OnScrollListView;
+
+        CancellationTokenSource tokenSource = new CancellationTokenSource();
+        CancellationToken token;
 
         internal void LoadLyrics()
         {
             Task.Run(async () =>
            {
                var lycList = await PlayerService.LoadLyrics();
+               Lyrics.Clear();
                foreach (var item in lycList)
                {
                    Lyrics.Add(item);
@@ -74,7 +85,12 @@ namespace VVMusic.ViewModels
             PlayerService = DependencyService.Get<IPlayerService>();
             ServerStore = DependencyService.Get<IServerStore>();
 
+            CreateCancelToken();
+
             PlayCommand = new Command(Play);
+            NextCommand = new Command(Next);
+            PreviousCommand = new Command(Previous);
+
             Lyrics = new ObservableCollection<LrcItemViewModel>();
         }
 
@@ -91,6 +107,50 @@ namespace VVMusic.ViewModels
             }
         }
 
+        public async void Next(object obj)
+        {
+            CancelAndCreateToken();
+
+            Lyrics.Clear();
+            Lyrics.Add(new LrcItemViewModel()
+            {
+                FontSize = 22,
+                Lyrics = "歌词加载中...",
+                ShowTime = new TimeSpan(0, 0, 0),
+                TextColor = Color.LightBlue
+            });
+
+            Task.Run(async () =>
+            {
+                await PlayerService.StopAsync();
+                PlayerService.NextAsync();
+
+                LoadLyrics();
+            });
+        }
+
+        public async void Previous(object obj)
+        {
+            CancelAndCreateToken();
+
+            Lyrics.Clear();
+            Lyrics.Add(new LrcItemViewModel()
+            {
+                FontSize = 22,
+                Lyrics = "歌词加载中...",
+                ShowTime = new TimeSpan(0, 0, 0),
+                TextColor = Color.LightBlue
+            });
+
+            Task.Run(async () =>
+            {
+                await PlayerService.StopAsync();
+                PlayerService.PreviousAsync();
+
+                LoadLyrics();
+            });
+        }
+
         private void ScrollLyrics(bool isWaitPlay = false)
         {
             Task.Run(async () =>
@@ -98,10 +158,14 @@ namespace VVMusic.ViewModels
                 if (isWaitPlay)
                     while (!PlayerService.audioPlayer.IsPlaying)
                     {
+                        if (token.IsCancellationRequested)
+                            return;
                         await Task.Delay(300);
                     }
                 while (PlayerService.audioPlayer.IsPlaying)
                 {
+                    if (token.IsCancellationRequested)
+                        return;
                     await PlayerService.GetTimeInfo();
 
                     StrCurrentPosition = PlayingInfo.StrCurrentPosition;
@@ -110,11 +174,12 @@ namespace VVMusic.ViewModels
                     Duration = PlayingInfo.Duration;
 
                     SetLyrics(PlayingInfo.CurrentTime);
-                    await Task.Delay(500);
+                    await Task.Delay(100);
                 }
-            });
+                if (token.IsCancellationRequested)
+                    return;
+            }, token);
         }
-
 
         void SetLyrics(TimeSpan ts)
         {
@@ -151,6 +216,16 @@ namespace VVMusic.ViewModels
             }
         }
 
-        public Action<int> OnScrollListView;
+        void CreateCancelToken()
+        {
+            CancellationToken token = tokenSource.Token;
+        }
+
+        public void CancelAndCreateToken()
+        {
+            tokenSource.Cancel();
+            CreateCancelToken();
+        }
+
     }
 }

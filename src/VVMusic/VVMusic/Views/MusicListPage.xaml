@@ -2,6 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="VVMusic.Views.MusicListPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="music_128.png" Command="{Binding OpenPlayingCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout Margin="8,0,8,0">
             <CollectionView 

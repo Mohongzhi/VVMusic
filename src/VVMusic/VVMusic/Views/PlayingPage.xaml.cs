@@ -31,7 +31,22 @@ namespace VVMusic.Views
         {
             base.OnAppearing();
 
+            PlayingViewModel.Lyrics.Add(new LrcItemViewModel()
+            {
+                FontSize = 22,
+                Lyrics = "歌词加载中...",
+                ShowTime = new TimeSpan(0, 0, 0),
+                TextColor = Color.LightBlue
+            });
+
             PlayingViewModel.LoadLyrics();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            PlayingViewModel.CancelAndCreateToken();
         }
     }
 }

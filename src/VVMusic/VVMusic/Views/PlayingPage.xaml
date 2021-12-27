@@ -25,9 +25,9 @@
                 <Label Text="{Binding StrDuration}" HorizontalOptions="End"></Label>
             </StackLayout>
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="0,0,0,8">
-                <ImageButton Source="previou_button_128.png" HeightRequest="50" BackgroundColor="Transparent" Margin="0,0,20,0"></ImageButton>
+                <ImageButton Source="previou_button_128.png" Command="{Binding PreviousCommand}" HeightRequest="50" BackgroundColor="Transparent" Margin="0,0,20,0"></ImageButton>
                 <ImageButton Source="play_128.png" Command="{Binding PlayCommand}" HeightRequest="50" BackgroundColor="Transparent" Margin="0,0,20,0"></ImageButton>
-                <ImageButton Source="next_button_128.png" HeightRequest="50" BackgroundColor="Transparent" Margin="0,0,0,0"></ImageButton>
+                <ImageButton Source="next_button_128.png" Command="{Binding NextCommand}" HeightRequest="50" BackgroundColor="Transparent" Margin="0,0,0,0"></ImageButton>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

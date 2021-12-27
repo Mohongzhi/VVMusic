@@ -3,17 +3,18 @@ using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 using VVMusic.Models;
-using VVMusic.Services;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using VVMusic.Views;
+using VVMusic.Services;
 using VVMusic.StaticInfo;
+using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace VVMusic.ViewModels
 {
     public class MusicListViewModel : VVBaseViewModel
     {
+        public Command OpenPlayingCommand { get; }
+
         public Command SelectChangedCommand { get; }
         public ObservableCollection<MusicListItemViewModel> MusicListItemViewModels { get; set; }
 
@@ -41,11 +42,17 @@ namespace VVMusic.ViewModels
             MusicListItemViewModels = new ObservableCollection<MusicListItemViewModel>();
 
             SelectChangedCommand = new Command(OnSelectChangedCommand);
+            OpenPlayingCommand = new Command(OnOpenPlayingCommand);
         }
 
-        public async Task LoadMusic()
+        /// <summary>
+        /// 加载音乐
+        /// </summary>
+        /// <returns></returns>
+        public async Task LoadMusicAsync()
         {
             MusicListItemViewModels.Clear();
+            PlayingInfo.MusicLists.Clear();
 
             var listItems = ServerStore.GetLinkItemsAsync(ConfigStore.ServerInfo.MusicFolder).Result;
             var allMusic = listItems.Where(x => x.IsFolder == false).ToList();
@@ -55,7 +62,7 @@ namespace VVMusic.ViewModels
                 {//音乐
                     var musicItem = new MusicListItemViewModel();
                     musicItem.Name = item.Name;
-                    PlayerService.MusicLists.Add(musicItem);
+                    PlayingInfo.MusicLists.Add(musicItem);
                     MusicListItemViewModels.Add(musicItem);
                     var str = item.Name.Remove(item.Name.LastIndexOf("."));
                     var lrc = PlayerService.Lyrics.FirstOrDefault(x => x.Contains(str));
@@ -87,9 +94,8 @@ namespace VVMusic.ViewModels
             {
                 Task.Run(async () =>
                 {
-                    if(PlayingInfo.MusicListItem == CurrentSelectItem)
-                    {
-                        await Shell.Current.GoToAsync($"{nameof(PlayingPage)}");
+                    if (PlayingInfo.MusicListItem != null && PlayingInfo.MusicListItem.Name == CurrentSelectItem.Name)
+                    {//同一首歌跳过播放，直接打开界面
                         return;
                     }
 
@@ -102,6 +108,11 @@ namespace VVMusic.ViewModels
 
                 await Shell.Current.GoToAsync($"{nameof(PlayingPage)}");
             }
+        }
+
+        public async void OnOpenPlayingCommand(object obj)
+        {
+            await Shell.Current.GoToAsync($"{nameof(PlayingPage)}");
         }
     }
 }
