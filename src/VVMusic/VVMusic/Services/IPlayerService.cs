@@ -1,11 +1,7 @@
-﻿using Plugin.SimpleAudioPlayer;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using VVMusic.ViewModels;
 using System.Threading.Tasks;
-using VVMusic.Models;
-using VVMusic.ViewModels;
+using Plugin.SimpleAudioPlayer;
+using System.Collections.Generic;
 
 namespace VVMusic.Services
 {
@@ -14,12 +10,10 @@ namespace VVMusic.Services
     /// </summary>
     public interface IPlayerService
     {
-        SwitchMode SwitchMode { get; set; }
-
         /// <summary>
-        /// 播放列表
+        /// 切歌模式
         /// </summary>
-        List<MusicListItemViewModel> MusicLists { get; set; }
+        SwitchMode SwitchMode { get; set; }
 
         /// <summary>
         /// 歌词列表
@@ -31,20 +25,53 @@ namespace VVMusic.Services
         /// </summary>
         ISimpleAudioPlayer audioPlayer { get; set; }
 
+        /// <summary>
+        /// 播放
+        /// </summary>
+        /// <returns></returns>
         Task PlayAsync();
 
+        /// <summary>
+        /// 停止
+        /// </summary>
+        /// <returns></returns>
         Task StopAsync();
 
+        /// <summary>
+        /// 暂停
+        /// </summary>
+        /// <returns></returns>
         Task PauseAsync();
 
+        /// <summary>
+        /// 下一曲
+        /// </summary>
+        /// <returns></returns>
         Task NextAsync();
 
+        /// <summary>
+        /// 上一曲
+        /// </summary>
+        /// <returns></returns>
         Task PreviousAsync();
 
+        /// <summary>
+        /// 加载音乐
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         Task LoadMusicStreamAsync(MusicListItemViewModel model);
 
+        /// <summary>
+        /// 加载歌词
+        /// </summary>
+        /// <returns></returns>
         Task<List<LrcItemViewModel>> LoadLyrics();
 
+        /// <summary>
+        /// 获取播放器时间信息
+        /// </summary>
+        /// <returns></returns>
         Task GetTimeInfo();
 
     }

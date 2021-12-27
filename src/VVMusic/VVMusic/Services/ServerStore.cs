@@ -1,14 +1,11 @@
 ﻿using RestSharp;
-using RestSharp.Authenticators;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
-using VVMusic.Models;
 using Xamarin.Forms;
+using VVMusic.Models;
+using System.Threading.Tasks;
+using RestSharp.Authenticators;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace VVMusic.Services
 {

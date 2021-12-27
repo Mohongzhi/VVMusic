@@ -1,13 +1,14 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text;
+using Xamarin.Forms;
 using VVMusic.ViewModels;
+using VVMusic.StaticInfo;
 using System.Threading.Tasks;
 using Plugin.SimpleAudioPlayer;
 using System.Collections.Generic;
-using System.IO;
-using Xamarin.Forms;
 using System.Text.RegularExpressions;
-using VVMusic.StaticInfo;
 
 namespace VVMusic.Services
 {
@@ -17,7 +18,7 @@ namespace VVMusic.Services
         public List<string> Lyrics { get; set; } = new List<string>();
 
         public ISimpleAudioPlayer audioPlayer { get; set; }
-        public SwitchMode SwitchMode { get; set; }
+        public SwitchMode SwitchMode { get; set; } = SwitchMode.Loop;
 
         public IServerStore ServerStore { get; }
 
@@ -30,7 +31,51 @@ namespace VVMusic.Services
 
         public async Task NextAsync()
         {
-
+            var currentIndex = PlayingInfo.MusicLists.IndexOf(PlayingInfo.MusicListItem);
+            MusicListItemViewModel nextMusicItem = null;
+            if (currentIndex != -1 && currentIndex != PlayingInfo.MusicLists.Count - 1)
+            {
+                switch (SwitchMode)
+                {
+                    case SwitchMode.Loop:
+                    case SwitchMode.Sequence:
+                        {
+                            nextMusicItem = PlayingInfo.MusicLists[currentIndex + 1];
+                            break;
+                        }
+                    case SwitchMode.Random:
+                        {
+                            var rd = new Random(DateTime.Now.Millisecond);
+                            nextMusicItem = PlayingInfo.MusicLists[rd.Next(rd.Next(0, PlayingInfo.MusicLists.Count))];
+                            break;
+                        }
+                }
+            }
+            else if (currentIndex == PlayingInfo.MusicLists.Count - 1)
+            {
+                switch (SwitchMode)
+                {
+                    case SwitchMode.Loop:
+                        {
+                            nextMusicItem = PlayingInfo.MusicLists.FirstOrDefault();
+                            break;
+                        }
+                    case SwitchMode.Sequence:
+                        break;
+                    case SwitchMode.Random:
+                        {
+                            var rd = new Random(DateTime.Now.Millisecond);
+                            nextMusicItem = PlayingInfo.MusicLists[rd.Next(rd.Next(0, PlayingInfo.MusicLists.Count))];
+                            break;
+                        }
+                }
+            }
+            if (nextMusicItem != null)
+            {
+                PlayingInfo.MusicListItem = nextMusicItem;
+                await LoadMusicStreamAsync(nextMusicItem);
+                PlayAsync();
+            }
         }
 
         public async Task PauseAsync()
@@ -45,6 +90,51 @@ namespace VVMusic.Services
 
         public async Task PreviousAsync()
         {
+            var currentIndex = PlayingInfo.MusicLists.IndexOf(PlayingInfo.MusicListItem);
+            MusicListItemViewModel nextMusicItem = null;
+            if (currentIndex > 0)
+            {
+                switch (SwitchMode)
+                {
+                    case SwitchMode.Loop:
+                    case SwitchMode.Sequence:
+                        {
+                            nextMusicItem = PlayingInfo.MusicLists[currentIndex - 1];
+                            break;
+                        }
+                    case SwitchMode.Random:
+                        {
+                            var rd = new Random(DateTime.Now.Millisecond);
+                            nextMusicItem = PlayingInfo.MusicLists[rd.Next(rd.Next(0, PlayingInfo.MusicLists.Count))];
+                            break;
+                        }
+                }
+            }
+            else if (currentIndex == 0)
+            {
+                switch (SwitchMode)
+                {
+                    case SwitchMode.Loop:
+                        {
+                            nextMusicItem = PlayingInfo.MusicLists.LastOrDefault();
+                            break;
+                        }
+                    case SwitchMode.Sequence:
+                        break;
+                    case SwitchMode.Random:
+                        {
+                            var rd = new Random(DateTime.Now.Millisecond);
+                            nextMusicItem = PlayingInfo.MusicLists[rd.Next(rd.Next(0, PlayingInfo.MusicLists.Count))];
+                            break;
+                        }
+                }
+            }
+            if (nextMusicItem != null)
+            {
+                PlayingInfo.MusicListItem = nextMusicItem;
+                await LoadMusicStreamAsync(nextMusicItem);
+                PlayAsync();
+            }
         }
 
         public async Task StopAsync()
