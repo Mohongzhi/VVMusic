@@ -4,6 +4,8 @@
 
 ## 图
 <img src="/docs/images/image_1.png">
+<img src="/docs/images/image_2.png">
+<img src="/docs/images/image_3.png">
 
 ## 相关开源库
 - [SimpleAudioPlayer](https://github.com/adrianstevens/Xamarin-Plugins)
